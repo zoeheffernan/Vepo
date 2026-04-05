@@ -454,31 +454,52 @@ const ONBOARD_SLIDES = [
 function OnboardingScreen({ onDone }) {
   const [idx, setIdx] = useState(0);
   const [sliding, setSliding] = useState(false);
-  const [direction, setDirection] = useState(1);
+  const [slideDir, setSlideDir] = useState("right");
+  const touchStartX = useRef(null);
 
-  const next = () => {
+  const goTo = (newIdx, dir) => {
     if (sliding) return;
-    setDirection(1);
+    setSlideDir(dir);
     setSliding(true);
     setTimeout(() => {
-      if (idx < ONBOARD_SLIDES.length - 1) setIdx(i => i + 1);
-      else { setSliding(false); onDone(); return; }
+      if (newIdx >= ONBOARD_SLIDES.length) { setSliding(false); onDone(); return; }
+      setIdx(newIdx);
       setSliding(false);
     }, 320);
   };
 
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) < 40) return;
+    if (diff > 0) {
+      goTo(idx + 1, "right");
+    } else {
+      if (idx > 0) goTo(idx - 1, "left");
+    }
+    touchStartX.current = null;
+  };
+
   return (
-    <div style={{ ...S.screen, justifyContent: "space-between", cursor: "pointer", overflow: "hidden" }} onClick={next}>
+    <div
+      style={{ ...S.screen, justifyContent: "space-between", overflow: "hidden" }}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       <style>{`
         @keyframes slideInRight { from { opacity: 0; transform: translateX(60px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes slideOutLeft { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(-60px); } }
-        .slide-in { animation: slideInRight 0.32s ease forwards; }
-        .slide-out { animation: slideOutLeft 0.32s ease forwards; }
+        @keyframes slideInLeft  { from { opacity: 0; transform: translateX(-60px); } to { opacity: 1; transform: translateX(0); } }
+        .slide-in-right { animation: slideInRight 0.32s ease forwards; }
+        .slide-in-left  { animation: slideInLeft  0.32s ease forwards; }
       `}</style>
       <div style={{ flex: 1, display: "flex", alignItems: "center", padding: "0 40px" }}>
         <p
           key={idx}
-          className="slide-in"
+          className={slideDir === "right" ? "slide-in-right" : "slide-in-left"}
           style={{ fontSize: 19, lineHeight: 1.55, color: "#1a1a1a", textAlign: "center", fontFamily: FONT, fontWeight: 400, margin: 0 }}>
           {ONBOARD_SLIDES[idx]}
         </p>
@@ -504,7 +525,7 @@ function WarningScreen({ onNext }) {
       <div style={{ padding: "44px 32px 28px", flex: 1, overflowY: "auto" }}>
         <div style={{ textAlign: "center", marginBottom: 28 }}>
           <div style={S.logo}>νερό</div>
-          <div style={{ ...S.muted, letterSpacing: 5, fontSize: 11, marginTop: 6 }}>SHOWER DEVICE</div>
+          <div style={{ ...S.muted, letterSpacing: 5, fontSize: 11, marginTop: 6, marginBottom: 0 }}>SHOWER DEVICE</div>
         </div>
         <h2 style={{ textAlign: "center", fontWeight: 700, fontSize: 20, marginBottom: 22, fontFamily: FONT, letterSpacing: 2 }}>WARNING</h2>
         <p style={{ fontSize: 14, lineHeight: 1.9, marginBottom: 18, fontFamily: FONT, fontWeight: 400, color: "#333" }}>
@@ -553,17 +574,17 @@ function GettingStartedScreen({ onDone }) {
 
         <div style={{ marginBottom: 28 }}>
           <span style={{ fontWeight: 600, fontSize: 13, fontFamily: FONT, letterSpacing: 1, color: "#666", display: "block", marginBottom: 8 }}>NAME</span>
-          <input style={{ ...S.input, width: "100%" }} value={form.name} onChange={e => set("name", e.target.value)} placeholder="" />
+          <input style={{ ...S.input, width: "100%", boxSizing: "border-box", height: 48 }} value={form.name} onChange={e => set("name", e.target.value)} placeholder="" />
         </div>
 
         <div style={{ marginBottom: 28 }}>
           <span style={{ fontWeight: 600, fontSize: 13, fontFamily: FONT, letterSpacing: 1, color: "#666", display: "block", marginBottom: 8 }}>EMAIL</span>
-          <input style={{ ...S.input, width: "100%" }} type="email" value={form.email || ""} onChange={e => set("email", e.target.value)} placeholder="" />
+          <input style={{ ...S.input, width: "100%", boxSizing: "border-box", height: 48 }} type="email" value={form.email || ""} onChange={e => set("email", e.target.value)} placeholder="" />
         </div>
 
         <div style={{ marginBottom: 28 }}>
           <span style={{ fontWeight: 600, fontSize: 13, fontFamily: FONT, letterSpacing: 1, color: "#666", display: "block", marginBottom: 8 }}>BIRTH DATE</span>
-          <input style={{ ...S.input, width: "100%" }} type="date" value={form.birthDate} onChange={e => set("birthDate", e.target.value)} />
+          <input style={{ ...S.input, width: "100%", boxSizing: "border-box", height: 48 }} type="date" value={form.birthDate} onChange={e => set("birthDate", e.target.value)} />
         </div>
 
         <div style={{ marginBottom: 36 }}>
@@ -1002,15 +1023,15 @@ function CalendarScreen({ logs, onSelectDay, onBack }) {
 
   return (
     <div style={S.screen}>
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end", padding: "0 24px 96px" }}>
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end", padding: "0 24px 24px" }}>
 
         {/* νερό logo */}
-        <div style={{ ...S.logoSm, textAlign: "left", marginBottom: 4 }}>νερό</div>
+        <div style={{ ...S.logoSm, textAlign: "left", marginBottom: 4, color: "#1a1a1a" }}>νερό</div>
 
         {/* Big date + arrows on same row, day-of-week far right */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            <div style={{ fontWeight: 700, fontSize: 88, lineHeight: 1, fontFamily: FONT, letterSpacing: -2 }}>
+            <div style={{ fontWeight: 700, fontSize: 88, lineHeight: 1, fontFamily: FONT, letterSpacing: -2, color: "#1a1a1a" }}>
               {String(currentDate.getDate()).padStart(2, "0")}
             </div>
             <div style={{ display: "flex", gap: 12 }}>
@@ -1025,8 +1046,8 @@ function CalendarScreen({ logs, onSelectDay, onBack }) {
 
         {/* Month + year */}
         <div style={{ display: "flex", alignItems: "baseline", gap: 12, marginBottom: 24 }}>
-          <span style={{ fontWeight: 700, fontSize: 18, fontFamily: FONT, letterSpacing: 1 }}>{monthName}</span>
-          <span style={{ fontWeight: 400, fontSize: 14, color: "#999", fontFamily: FONT }}>{year}</span>
+          <span style={{ fontWeight: 700, fontSize: 18, fontFamily: FONT, letterSpacing: 1, color: "#1a1a1a" }}>{monthName}</span>
+          <span style={{ fontWeight: 400, fontSize: 14, color: "#1a1a1a", fontFamily: FONT }}>{year}</span>
         </div>
 
         {/* Day headers */}
