@@ -162,6 +162,8 @@ const styleEl = document.createElement("style");
 styleEl.textContent = `
   * { scrollbar-width: none; -ms-overflow-style: none; }
   *::-webkit-scrollbar { display: none; }
+  .no-scroll { overflow: hidden !important; touch-action: none !important; overscroll-behavior: none !important; }
+  .swipe-screen { touch-action: pan-x !important; overflow: hidden !important; }
 `;
 document.head.appendChild(styleEl);
 
@@ -487,6 +489,7 @@ function OnboardingScreen({ onDone }) {
   return (
     <div
       style={{ ...S.screen, justifyContent: "space-between", overflow: "hidden" }}
+      className="swipe-screen"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
@@ -521,20 +524,20 @@ function OnboardingScreen({ onDone }) {
 // 3. Warning screen
 function WarningScreen({ onNext }) {
   return (
-    <div style={{ ...S.screen }}>
-      <div style={{ padding: "36px 32px 16px", flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-        <div style={{ textAlign: "left", marginBottom: 20 }}>
-          <div style={{ ...S.logo, textAlign: "left" }}>νερό</div>
+    <div style={{ ...S.screen, touchAction: "none" }} className="no-scroll">
+      <div style={{ padding: "44px 32px 28px", flex: 1, overflow: "hidden" }}>
+        <div style={{ textAlign: "center", marginBottom: 28 }}>
+          <div style={S.logo}>νερό</div>
           <div style={{ ...S.muted, letterSpacing: 5, fontSize: 11, marginTop: 6, marginBottom: 0 }}>SHOWER DEVICE</div>
         </div>
-        <h2 style={{ textAlign: "left", fontWeight: 700, fontSize: 17, marginBottom: 14, fontFamily: FONT, letterSpacing: 2 }}>WARNING</h2>
-        <p style={{ fontSize: 12, lineHeight: 1.6, marginBottom: 10, fontFamily: FONT, fontWeight: 400, color: "#333" }}>
-          Individuals with the following conditions should use extreme caution when engaging in cold or contrast showers. Consult a healthcare professional before use.
+        <h2 style={{ textAlign: "center", fontWeight: 700, fontSize: 20, marginBottom: 22, fontFamily: FONT, letterSpacing: 2 }}>WARNING</h2>
+        <p style={{ fontSize: 14, lineHeight: 1.9, marginBottom: 18, fontFamily: FONT, fontWeight: 400, color: "#333" }}>
+          Individuals with the following conditions should use extreme caution when engaging in cold or contrast showers. Consultation with a healthcare professional is strongly recommended before using this device and/or app.
         </p>
-        <ul style={{ fontSize: 12, lineHeight: 1.9, paddingLeft: 18, fontFamily: FONT, fontWeight: 400, color: "#333", margin: 0 }}>
+        <ul style={{ fontSize: 14, lineHeight: 2.4, paddingLeft: 20, fontFamily: FONT, fontWeight: 400, color: "#333" }}>
           <li>Chronic illnesses such as diabetes or respiratory conditions</li>
-          <li>Compromised immune systems or long-term medical conditions</li>
-          <li>Cardiovascular conditions including heart disease or heart failure</li>
+          <li>Compromised immune systems or other long-term medical conditions</li>
+          <li>Cardiovascular conditions, including heart disease, coronary artery disease, or heart failure</li>
           <li>High blood pressure (hypertension)</li>
           <li>History of stroke</li>
           <li>Raynaud's disease</li>
@@ -555,8 +558,8 @@ function GettingStartedScreen({ onDone }) {
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
-  const ToggleGroup = ({ options, value, onChange }) => (
-    <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 4 }}>
+  const ToggleGroup = ({ options, value, onChange, centered }) => (
+    <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 4, justifyContent: centered ? "center" : "flex-start" }}>
       {options.map(o => (
         <button key={o} onClick={() => onChange(o)} style={{
           ...S.pillSm,
@@ -570,7 +573,7 @@ function GettingStartedScreen({ onDone }) {
   return (
     <div style={{ ...S.screen }}>
       <div style={{ flex: 1, overflowY: "auto", padding: "48px 32px 28px" }}>
-        <h2 style={{ fontWeight: 700, fontSize: 22, textAlign: "left", marginBottom: 48, fontFamily: FONT, letterSpacing: 2 }}>GETTING STARTED</h2>
+        <h2 style={{ fontWeight: 700, fontSize: 22, textAlign: "center", marginBottom: 48, fontFamily: FONT, letterSpacing: 2 }}>GETTING STARTED</h2>
 
         <div style={{ marginBottom: 28 }}>
           <span style={{ fontWeight: 600, fontSize: 13, fontFamily: FONT, letterSpacing: 1, color: "#666", display: "block", marginBottom: 8 }}>NAME</span>
@@ -588,24 +591,32 @@ function GettingStartedScreen({ onDone }) {
         </div>
 
         <div style={{ marginBottom: 36 }}>
-          <span style={{ fontWeight: 600, fontSize: 13, fontFamily: FONT, letterSpacing: 1, color: "#666", display: "block", marginBottom: 12 }}>GENDER</span>
-          <ToggleGroup options={["Female", "Male"]} value={form.gender} onChange={v => set("gender", v)} />
+          <span style={{ fontWeight: 600, fontSize: 13, fontFamily: FONT, letterSpacing: 1, color: "#666", display: "block", marginBottom: 12, textAlign: "center" }}>GENDER</span>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center" }}>
+            <ToggleGroup options={["Female", "Male"]} value={form.gender} onChange={v => set("gender", v)} centered />
+          </div>
         </div>
 
         <div style={{ marginBottom: 36 }}>
-          <span style={{ fontWeight: 600, fontSize: 13, fontFamily: FONT, letterSpacing: 1, color: "#666", display: "block", marginBottom: 12 }}>HOW OFTEN DO YOU WORK OUT A WEEK?</span>
-          <ToggleGroup options={["0-1 days", "2-3 days", "4+ days"]} value={form.workouts} onChange={v => set("workouts", v)} />
+          <span style={{ fontWeight: 600, fontSize: 13, fontFamily: FONT, letterSpacing: 1, color: "#666", display: "block", marginBottom: 12, textAlign: "center" }}>HOW OFTEN DO YOU WORK OUT A WEEK?</span>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center" }}>
+            <ToggleGroup options={["0-1 days", "2-3 days", "4+ days"]} value={form.workouts} onChange={v => set("workouts", v)} centered />
+          </div>
         </div>
 
         <div style={{ marginBottom: 36 }}>
-          <span style={{ fontWeight: 600, fontSize: 13, fontFamily: FONT, letterSpacing: 1, color: "#666", display: "block", marginBottom: 12 }}>DO YOU CURRENTLY TAKE COLD SHOWERS?</span>
-          <ToggleGroup options={["Yes", "No"]} value={form.coldShower} onChange={v => set("coldShower", v)} />
+          <span style={{ fontWeight: 600, fontSize: 13, fontFamily: FONT, letterSpacing: 1, color: "#666", display: "block", marginBottom: 12, textAlign: "center" }}>DO YOU CURRENTLY TAKE COLD SHOWERS?</span>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center" }}>
+            <ToggleGroup options={["Yes", "No"]} value={form.coldShower} onChange={v => set("coldShower", v)} centered />
+          </div>
         </div>
 
         {form.coldShower === "Yes" && (
           <div style={{ marginBottom: 36 }}>
-            <span style={{ fontWeight: 600, fontSize: 13, fontFamily: FONT, letterSpacing: 1, color: "#666", display: "block", marginBottom: 12 }}>IF SO, HOW OFTEN?</span>
-            <ToggleGroup options={["0 days", "1-3 days", "4+ days"]} value={form.coldFreq} onChange={v => set("coldFreq", v)} />
+            <span style={{ fontWeight: 600, fontSize: 13, fontFamily: FONT, letterSpacing: 1, color: "#666", display: "block", marginBottom: 12, textAlign: "center" }}>IF SO, HOW OFTEN?</span>
+            <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center" }}>
+              <ToggleGroup options={["0 days", "1-3 days", "4+ days"]} value={form.coldFreq} onChange={v => set("coldFreq", v)} centered />
+            </div>
           </div>
         )}
       </div>
@@ -824,7 +835,7 @@ function ResultsScreen({ date, logs, setLogs, preset, showerTime, readOnly, onBa
   };
 
   return (
-    <div style={S.screen}>
+    <div style={S.screen} className="no-scroll">
       {editPreset && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.35)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100 }}>
           <div style={{ background: "#fff", borderRadius: 16, padding: 28, width: 280 }}>
@@ -843,7 +854,7 @@ function ResultsScreen({ date, logs, setLogs, preset, showerTime, readOnly, onBa
         <EditModal label="Time in Shower" value={time} unit="min" onSave={v => { setTime(v); setEditTime(false); }} onClose={() => setEditTime(false)} />
       )}
       <button style={S.back} onClick={onBack}>‹</button>
-      <div style={{ flex: 1, padding: "0 32px 24px", overflow: "hidden" }}>
+      <div style={{ flex: 1, padding: "0 32px 24px", overflow: "hidden", touchAction: "none" }}>
         <h2 style={{ fontWeight: 600, textAlign: "center", fontSize: 17, marginBottom: 32, fontFamily: FONT, letterSpacing: 2 }}>{formatDate(date)}</h2>
 
         <div style={S.row}>
@@ -975,8 +986,8 @@ function InsightsScreen({ logs, onCalendar, onNav }) {
   ];
 
   return (
-    <div style={S.screen}>
-      <div style={{ flex: 1, padding: "52px 32px 0", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+    <div style={S.screen} className="no-scroll">
+      <div style={{ flex: 1, padding: "52px 32px 0", display: "flex", flexDirection: "column", overflow: "hidden", touchAction: "none" }}>
         <div style={{ textAlign: "center", marginBottom: 28 }}>
           <span style={S.logo}>νερό</span>
           <div style={{ ...S.muted, letterSpacing: 5, fontSize: 11, marginTop: 6 }}>INSIGHTS</div>
@@ -989,7 +1000,7 @@ function InsightsScreen({ logs, onCalendar, onNav }) {
               <div style={{ width: 54, height: 54, background: "#f0f2f3", borderRadius: 16, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                 {ICONS[item.iconKey](24, "#1a1a1a")}
               </div>
-              <div style={{ fontFamily: FONT }}>
+              <div style={{ fontFamily: FONT, textAlign: "left" }}>
                 <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 4 }}>{item.bold}</div>
                 <div style={{ fontWeight: 400, fontSize: 14, color: "#666" }}>{item.rest}</div>
               </div>
@@ -1022,7 +1033,7 @@ function CalendarScreen({ logs, onSelectDay, onBack }) {
   const today = 8;
 
   return (
-    <div style={S.screen}>
+    <div style={S.screen} className="no-scroll">
       <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "flex-end", padding: "0 24px 24px" }}>
 
         {/* νερό logo */}
