@@ -59,7 +59,7 @@ const ARTICLES = [
     title: "Hot showers vs. cold showers: Which is better?",
     source: "Healthline",
     url: "https://www.healthline.com/health/cold-shower-benefits",
-    image: "/images/two.jpg",
+    image: "/images/seven.jpg",
     body: `Both hot and cold showers offer unique health benefits. The best choice depends on your personal health goals and how your body responds to temperature changes.\n\nHot showers help relax muscles, open pores, and improve circulation by dilating blood vessels. They are particularly beneficial before bed as they promote relaxation and better sleep quality.\n\nCold showers activate brown adipose tissue — the fat we are all born with that plays an important role in metabolic health. Healthy levels of brown fat indicate that white fat, associated with obesity and heart disease, will be at a healthier level too.\n\nBy bringing the temperature of an area of the body down, we speed up the delivery of warmer, freshly oxygenated blood to that area — which speeds up recovery time for muscles and tissue.\n\nThe shock of cold water in the bloodstream stimulates leukocytes, which help fight infection. This means taking cold showers may support your body's resistance to common illnesses like colds and flu.`,
   },
   {
@@ -522,19 +522,19 @@ function OnboardingScreen({ onDone }) {
 function WarningScreen({ onNext }) {
   return (
     <div style={{ ...S.screen }}>
-      <div style={{ padding: "44px 32px 28px", flex: 1, overflowY: "auto" }}>
-        <div style={{ textAlign: "center", marginBottom: 28 }}>
-          <div style={S.logo}>νερό</div>
+      <div style={{ padding: "36px 32px 16px", flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+        <div style={{ textAlign: "left", marginBottom: 20 }}>
+          <div style={{ ...S.logo, textAlign: "left" }}>νερό</div>
           <div style={{ ...S.muted, letterSpacing: 5, fontSize: 11, marginTop: 6, marginBottom: 0 }}>SHOWER DEVICE</div>
         </div>
-        <h2 style={{ textAlign: "center", fontWeight: 700, fontSize: 20, marginBottom: 22, fontFamily: FONT, letterSpacing: 2 }}>WARNING</h2>
-        <p style={{ fontSize: 14, lineHeight: 1.9, marginBottom: 18, fontFamily: FONT, fontWeight: 400, color: "#333" }}>
-          Individuals with the following conditions should use extreme caution when engaging in cold or contrast showers. Consultation with a healthcare professional is strongly recommended before using this device and/or app.
+        <h2 style={{ textAlign: "left", fontWeight: 700, fontSize: 17, marginBottom: 14, fontFamily: FONT, letterSpacing: 2 }}>WARNING</h2>
+        <p style={{ fontSize: 12, lineHeight: 1.6, marginBottom: 10, fontFamily: FONT, fontWeight: 400, color: "#333" }}>
+          Individuals with the following conditions should use extreme caution when engaging in cold or contrast showers. Consult a healthcare professional before use.
         </p>
-        <ul style={{ fontSize: 14, lineHeight: 2.4, paddingLeft: 20, fontFamily: FONT, fontWeight: 400, color: "#333" }}>
+        <ul style={{ fontSize: 12, lineHeight: 1.9, paddingLeft: 18, fontFamily: FONT, fontWeight: 400, color: "#333", margin: 0 }}>
           <li>Chronic illnesses such as diabetes or respiratory conditions</li>
-          <li>Compromised immune systems or other long-term medical conditions</li>
-          <li>Cardiovascular conditions, including heart disease, coronary artery disease, or heart failure</li>
+          <li>Compromised immune systems or long-term medical conditions</li>
+          <li>Cardiovascular conditions including heart disease or heart failure</li>
           <li>High blood pressure (hypertension)</li>
           <li>History of stroke</li>
           <li>Raynaud's disease</li>
@@ -570,7 +570,7 @@ function GettingStartedScreen({ onDone }) {
   return (
     <div style={{ ...S.screen }}>
       <div style={{ flex: 1, overflowY: "auto", padding: "48px 32px 28px" }}>
-        <h2 style={{ fontWeight: 700, fontSize: 22, textAlign: "center", marginBottom: 48, fontFamily: FONT, letterSpacing: 2 }}>GETTING STARTED</h2>
+        <h2 style={{ fontWeight: 700, fontSize: 22, textAlign: "left", marginBottom: 48, fontFamily: FONT, letterSpacing: 2 }}>GETTING STARTED</h2>
 
         <div style={{ marginBottom: 28 }}>
           <span style={{ fontWeight: 600, fontSize: 13, fontFamily: FONT, letterSpacing: 1, color: "#666", display: "block", marginBottom: 8 }}>NAME</span>
@@ -584,7 +584,7 @@ function GettingStartedScreen({ onDone }) {
 
         <div style={{ marginBottom: 28 }}>
           <span style={{ fontWeight: 600, fontSize: 13, fontFamily: FONT, letterSpacing: 1, color: "#666", display: "block", marginBottom: 8 }}>BIRTH DATE</span>
-          <input style={{ ...S.input, width: "100%", boxSizing: "border-box", height: 48 }} type="date" value={form.birthDate} onChange={e => set("birthDate", e.target.value)} />
+          <input style={{ ...S.input, width: "100%", boxSizing: "border-box", height: 48, appearance: "none", WebkitAppearance: "none" }} type="date" value={form.birthDate} onChange={e => set("birthDate", e.target.value)} />
         </div>
 
         <div style={{ marginBottom: 36 }}>
@@ -623,7 +623,7 @@ function HomeScreen({ logs, onShower, onResults }) {
 
   return (
     <div style={S.screen}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 22, padding: "56px 36px 0" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 22, padding: "32px 36px 0" }}>
         <button style={{ background: "none", border: "none", fontSize: 26, cursor: "pointer", color: "#1a1a1a" }} onClick={() => setDate(d => addDays(d, -1))}>‹</button>
         <span style={{ fontWeight: 600, fontSize: 15, letterSpacing: 2, fontFamily: FONT }}>{formatDate(date)}</span>
         <button style={{ background: "none", border: "none", fontSize: 26, cursor: "pointer", color: "#1a1a1a" }} onClick={() => setDate(d => addDays(d, 1))}>›</button>
@@ -750,7 +750,7 @@ function ConnectingScreen({ onDone }) {
             <polyline points="6.5 6.5 17.5 17.5 12 23 12 1 17.5 6.5 6.5 17.5"/>
           </svg>
         </div>
-        <div style={{ fontWeight: 600, fontSize: 16, letterSpacing: 3, fontFamily: FONT }}>
+        <div style={{ fontWeight: 600, fontSize: 16, letterSpacing: 3, fontFamily: FONT, color: "#1a1a1a" }}>
           CONNECTING DEVICE{"." .repeat(dots) + "\u00A0".repeat(3 - dots)}
         </div>
       </div>
@@ -771,8 +771,8 @@ function CountdownScreen({ onDone, onCancel }) {
   return (
     <div style={{ ...S.screen, ...S.screenGray, justifyContent: "space-between", alignItems: "center" }}>
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ fontWeight: 700, fontSize: 18, marginBottom: 24, letterSpacing: 3, fontFamily: FONT }}>STARTING IN...</div>
-        <div style={{ fontWeight: 300, fontSize: 108, lineHeight: 1, fontFamily: FONT }}>{count}</div>
+        <div style={{ fontWeight: 700, fontSize: 18, marginBottom: 24, letterSpacing: 3, fontFamily: FONT, color: "#1a1a1a" }}>STARTING IN...</div>
+        <div style={{ fontWeight: 300, fontSize: 108, lineHeight: 1, fontFamily: FONT, color: "#1a1a1a" }}>{count}</div>
       </div>
       <div style={{ paddingBottom: 64, display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
         <button style={{ ...S.pill, width: 220, marginBottom: 0, background: "transparent", border: "1.5px solid rgba(26,26,26,0.35)", color: "#1a1a1a" }} onClick={onCancel}>CANCEL</button>
@@ -786,7 +786,7 @@ function ShoweringScreen({ onResults, onCancel }) {
   return (
     <div style={{ ...S.screen, ...S.screenGray, justifyContent: "space-between", alignItems: "center" }}>
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ fontWeight: 700, fontSize: 20, letterSpacing: 3, fontFamily: FONT }}>SHOWERING</div>
+        <div style={{ fontWeight: 700, fontSize: 20, letterSpacing: 3, fontFamily: FONT, color: "#1a1a1a" }}>SHOWERING</div>
       </div>
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14, width: "100%", padding: "0 52px 68px" }}>
         <button style={{ ...S.pill, marginBottom: 0, background: "transparent", border: "1.5px solid rgba(26,26,26,0.35)", color: "#1a1a1a" }} onClick={onResults}>RESULTS</button>
@@ -843,7 +843,7 @@ function ResultsScreen({ date, logs, setLogs, preset, showerTime, readOnly, onBa
         <EditModal label="Time in Shower" value={time} unit="min" onSave={v => { setTime(v); setEditTime(false); }} onClose={() => setEditTime(false)} />
       )}
       <button style={S.back} onClick={onBack}>‹</button>
-      <div style={{ flex: 1, padding: "0 32px 24px", overflowY: "auto" }}>
+      <div style={{ flex: 1, padding: "0 32px 24px", overflow: "hidden" }}>
         <h2 style={{ fontWeight: 600, textAlign: "center", fontSize: 17, marginBottom: 32, fontFamily: FONT, letterSpacing: 2 }}>{formatDate(date)}</h2>
 
         <div style={S.row}>
@@ -904,7 +904,7 @@ function SubmittedScreen() {
   return (
     <div style={{ ...S.screen, ...S.screenGray, justifyContent: "space-between", alignItems: "center" }}>
       <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ fontWeight: 700, fontSize: 20, letterSpacing: 4, fontFamily: FONT }}>SUBMITTED</div>
+        <div style={{ fontWeight: 700, fontSize: 20, letterSpacing: 4, fontFamily: FONT, color: "#1a1a1a" }}>SUBMITTED</div>
       </div>
       <div style={{ paddingBottom: 52 }}>
         <span style={S.logoSm}>νερό</span>
@@ -976,7 +976,7 @@ function InsightsScreen({ logs, onCalendar, onNav }) {
 
   return (
     <div style={S.screen}>
-      <div style={{ flex: 1, padding: "52px 32px 0", display: "flex", flexDirection: "column" }}>
+      <div style={{ flex: 1, padding: "52px 32px 0", display: "flex", flexDirection: "column", overflow: "hidden" }}>
         <div style={{ textAlign: "center", marginBottom: 28 }}>
           <span style={S.logo}>νερό</span>
           <div style={{ ...S.muted, letterSpacing: 5, fontSize: 11, marginTop: 6 }}>INSIGHTS</div>
