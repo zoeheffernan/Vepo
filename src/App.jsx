@@ -166,9 +166,15 @@ styleEl.textContent = `
   .swipe-screen { touch-action: pan-x !important; overflow: hidden !important; }
   html, body, #root { height: 100%; margin: 0; padding: 0; background: #fff; }
   .app-shell { width: 100%; height: 100vh; overflow: hidden; background: #fff; display: flex; flex-direction: column; }
-  .inner { width: 100%; max-width: 390px; margin: 0 auto; flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  .inner { width: 100%; max-width: 580px; margin: 0 auto; flex: 1; display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
+  .nav-outer { width: 100vw; margin-left: calc(-50vw + 50%); flex-shrink: 0; background: #fff; border-top: 1px solid #e0e0e0; display: flex; justify-content: space-around; align-items: center; padding: 14px 0 20px; }
   @media (min-width: 600px) {
-    .content-wrap { max-width: 500px; margin: 0 auto; width: 100%; }
+    .inner { max-width: 680px; }
+    html { font-size: 19px; }
+  }
+  @media (min-width: 900px) {
+    .inner { max-width: 780px; }
+    html { font-size: 21px; }
   }
 `;
 document.head.appendChild(styleEl);
@@ -204,7 +210,6 @@ const S = {
     justifyContent: "space-around",
     alignItems: "center",
     padding: "14px 0 20px",
-    borderTop: "1px solid #e0e0e0",
     background: "#fff",
     flexShrink: 0,
   },
@@ -397,7 +402,7 @@ function BottomNav({ active, onNav }) {
     { id: "knowledge", icon: BookIcon },
   ];
   return (
-    <div style={S.navBar}>
+    <div className="nav-outer" style={S.navBar}>
       {tabs.map(({ id, icon: Icon }) => (
         <button key={id} style={S.navBtn} onClick={() => onNav(id)}>
           <Icon filled={active === id} />
