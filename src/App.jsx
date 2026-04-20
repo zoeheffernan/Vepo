@@ -165,7 +165,8 @@ styleEl.textContent = `
   .no-scroll { overflow: hidden !important; touch-action: none !important; overscroll-behavior: none !important; }
   .swipe-screen { touch-action: pan-x !important; overflow: hidden !important; }
   html, body, #root { height: 100%; margin: 0; padding: 0; background: #fff; }
-  .app-shell { width: 100%; height: 100vh; overflow: hidden; background: #fff; }
+  .app-shell { width: 100%; height: 100vh; overflow: hidden; background: #fff; display: flex; flex-direction: column; }
+  .inner { width: 100%; max-width: 390px; margin: 0 auto; flex: 1; display: flex; flex-direction: column; overflow: hidden; }
   @media (min-width: 600px) {
     .content-wrap { max-width: 500px; margin: 0 auto; width: 100%; }
   }
@@ -177,9 +178,9 @@ const FONT = "'Inter', sans-serif";
 const S = {
   screen: {
     width: "100%",
-    maxWidth: "100%",
+    flex: 1,
     margin: "0 auto",
-    height: "100vh",
+    height: "100%",
     background: "#fff",
     display: "flex",
     flexDirection: "column",
@@ -1322,7 +1323,13 @@ export default function App() {
     if (tab === "knowledge") go("knowledge");
   };
 
-  const shell = (screen) => <div className="app-shell">{screen}</div>;
+  const shell = (screenContent) => (
+    <div className="app-shell">
+      <div className="inner">
+        {screenContent}
+      </div>
+    </div>
+  );
 
   if (screen === "splash") return shell(<SplashScreen />);
   if (screen === "onboarding") return shell(<OnboardingScreen onDone={() => go("warning")} />);
