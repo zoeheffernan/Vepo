@@ -160,10 +160,21 @@ document.head.appendChild(fontLink);
 
 const styleEl = document.createElement("style");
 styleEl.textContent = `
-  * { scrollbar-width: none; -ms-overflow-style: none; }
+  * { scrollbar-width: none; -ms-overflow-style: none; box-sizing: border-box; }
   *::-webkit-scrollbar { display: none; }
   .no-scroll { overflow: hidden !important; touch-action: none !important; overscroll-behavior: none !important; }
   .swipe-screen { touch-action: pan-x !important; overflow: hidden !important; }
+  html, body, #root { height: 100%; margin: 0; padding: 0; background: #e8eced; }
+  .app-shell {
+    width: 100%;
+    max-width: 390px;
+    height: 100vh;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 0 40px rgba(0,0,0,0.15);
+  }
 `;
 document.head.appendChild(styleEl);
 
@@ -172,7 +183,7 @@ const FONT = "'Inter', sans-serif";
 const S = {
   screen: {
     width: "100%",
-    maxWidth: 390,
+    maxWidth: "100%",
     margin: "0 auto",
     height: "100vh",
     background: "#fff",
@@ -1317,12 +1328,14 @@ export default function App() {
     if (tab === "knowledge") go("knowledge");
   };
 
-  if (screen === "splash") return <SplashScreen />;
-  if (screen === "onboarding") return <OnboardingScreen onDone={() => go("warning")} />;
-  if (screen === "warning") return <WarningScreen onNext={() => go("getting_started")} />;
-  if (screen === "getting_started") return <GettingStartedScreen onDone={() => go("home")} />;
+  const shell = (screen) => <div className="app-shell">{screen}</div>;
 
-  if (screen === "home") return (
+  if (screen === "splash") return shell(<SplashScreen />);
+  if (screen === "onboarding") return shell(<OnboardingScreen onDone={() => go("warning")} />);
+  if (screen === "warning") return shell(<WarningScreen onNext={() => go("getting_started")} />);
+  if (screen === "getting_started") return shell(<GettingStartedScreen onDone={() => go("home")} />);
+
+  if (screen === "home") return shell(
     <HomeScreen logs={logs}
       onShower={date => { setActiveDate(date); go("preset_list"); }}
       onResults={(date, tab) => {
@@ -1335,13 +1348,13 @@ export default function App() {
   );
 
   // Shower flow
-  if (screen === "preset_list") return (
+  if (screen === "preset_list") return shell(
     <PresetListScreen presets={presets}
       onSelect={p => { setSelectedPreset(p); go("preset_selected_shower", "preset_list"); }}
       onBack={() => go("home")}
       onNav={handleNav} />
   );
-  if (screen === "preset_selected_shower") return (
+  if (screen === "preset_selected_shower") return shell(
     <PresetSelectedScreen preset={selectedPreset}
       isPresetNav={false}
       onStart={p => { setSelectedPreset(p); go("connecting"); }}
@@ -1349,10 +1362,10 @@ export default function App() {
       onBack={() => go("preset_list")}
       onNav={handleNav} />
   );
-  if (screen === "connecting") return (
+  if (screen === "connecting") return shell(
     <ConnectingScreen onDone={() => go("countdown")} />
   );
-  if (screen === "preset_selected") return (
+  if (screen === "preset_selected") return shell(
     <PresetSelectedScreen preset={selectedPreset}
       isPresetNav={true}
       onStart={() => {}}
@@ -1360,15 +1373,15 @@ export default function App() {
       onBack={() => go("create_presets")}
       onNav={handleNav} />
   );
-  if (screen === "countdown") return (
+  if (screen === "countdown") return shell(
     <CountdownScreen onDone={() => go("showering")} onCancel={() => go("home")} />
   );
-  if (screen === "showering") return (
+  if (screen === "showering") return shell(
     <ShoweringScreen
       onResults={() => { setResultsReadOnly(false); go("results"); }}
       onCancel={() => go("home")} />
   );
-  if (screen === "results") return (
+  if (screen === "results") return shell(
     <ResultsScreen date={activeDate} logs={logs} setLogs={setLogs}
       preset={selectedPreset} showerTime={selectedPreset?.totalTime}
       readOnly={resultsReadOnly}
@@ -1376,13 +1389,13 @@ export default function App() {
       onNav={handleNav}
       onSubmitted={() => go("submitted")} />
   );
-  if (screen === "submitted") return <SubmittedScreen />;
+  if (screen === "submitted") return <div className="app-shell"><SubmittedScreen /></div>;
 
   // Insights flow
-  if (screen === "insights") return (
+  if (screen === "insights") return shell(
     <InsightsScreen logs={logs} onCalendar={() => go("calendar")} onNav={handleNav} />
   );
-  if (screen === "calendar") return (
+  if (screen === "calendar") return shell(
     <CalendarScreen logs={logs}
       onSelectDay={date => {
         setActiveDate(date);
@@ -1394,19 +1407,19 @@ export default function App() {
   );
 
   // Preset creation flow
-  if (screen === "create_presets") return (
+  if (screen === "create_presets") return shell(
     <CreatePresetListScreen presets={presets}
       onSelect={p => { setSelectedPreset(p); go("preset_selected", "create_presets"); }}
       onNew={() => go("new_preset_form")}
       onBack={() => go("home")}
       onNav={handleNav} />
   );
-  if (screen === "new_preset_form") return (
+  if (screen === "new_preset_form") return shell(
     <NewPresetFormScreen
       onSubmit={base => { setNewPresetBase(base); go("new_preset_confirm"); }}
       onBack={() => go("create_presets")} />
   );
-  if (screen === "new_preset_confirm") return (
+  if (screen === "new_preset_confirm") return shell(
     <NewPresetConfirmScreen basePreset={newPresetBase}
       onConfirm={p => {
         setPresets(prev => [...prev, { ...p, id: Date.now() }]);
@@ -1415,15 +1428,15 @@ export default function App() {
       onBack={() => go("new_preset_form")}
       onNav={handleNav} />
   );
-  if (screen === "submitted_preset") return <SubmittedScreen />;
+  if (screen === "submitted_preset") return <div className="app-shell"><SubmittedScreen /></div>;
 
   // Knowledge flow
-  if (screen === "knowledge") return (
+  if (screen === "knowledge") return shell(
     <KnowledgeListScreen onArticle={a => { setCurrentArticle(a); go("article"); }} onNav={handleNav} />
   );
-  if (screen === "article") return (
+  if (screen === "article") return shell(
     <ArticleScreen article={currentArticle} onBack={() => go("knowledge")} onNav={handleNav} />
   );
 
-  return <SplashScreen />;
+  return shell(<SplashScreen />);
 }
