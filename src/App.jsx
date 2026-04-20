@@ -164,16 +164,10 @@ styleEl.textContent = `
   *::-webkit-scrollbar { display: none; }
   .no-scroll { overflow: hidden !important; touch-action: none !important; overscroll-behavior: none !important; }
   .swipe-screen { touch-action: pan-x !important; overflow: hidden !important; }
-  html, body, #root { height: 100%; margin: 0; padding: 0; background: #e8eced; }
-  .app-shell {
-    width: 100%;
-    max-width: 390px;
-    height: 100vh;
-    margin: 0 auto;
-    position: relative;
-    overflow: hidden;
-    background: #fff;
-    box-shadow: 0 0 40px rgba(0,0,0,0.15);
+  html, body, #root { height: 100%; margin: 0; padding: 0; background: #fff; }
+  .app-shell { width: 100%; height: 100vh; overflow: hidden; background: #fff; }
+  @media (min-width: 600px) {
+    .content-wrap { max-width: 500px; margin: 0 auto; width: 100%; }
   }
 `;
 document.head.appendChild(styleEl);
